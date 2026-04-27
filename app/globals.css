@@ -2,26 +2,279 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* ── Te Quiero brand tokens (HSL) ──────────────────────── */
+    /* Primary = Snorkel #00557F. Garantiza 7.3:1 con texto blanco (AA/AAA). */
+    /* El sky #0099F2 queda para ACENTO de identidad: wordmark, glifo, links, */
+    /* indicadores activos, focus ring y elementos decorativos ≥18pt. */
+    --primary:            199 100% 25%;
+    --primary-foreground: 36   30% 98%;
+
+    /* Secondary = sky #0099F2, solo en superficies grandes/decorativas */
+    --secondary:            204 100% 47%;
+    --secondary-foreground: 0   0% 100%;
+
+    /* Fondo crema #E8E3DF */
+    --background: 30 18% 89%;
+    --foreground: 202 100% 13%;
+
+    --card:           36 30% 98%;
+    --card-foreground: 202 100% 13%;
+
+    --popover:            36 30% 98%;
+    --popover-foreground: 202 100% 13%;
+
+    --muted:           30 14% 86%;
+    --muted-foreground: 199 30% 35%;
+
+    /* #C8A164 — gold */
+    --accent:           33 48% 59%;
+    --accent-foreground: 202 100% 13%;
+
+    --destructive:           0 70% 50%;
+    --destructive-foreground: 36 30% 98%;
+
+    --border: 30 14% 82%;
+    --input:  30 14% 82%;
+    --ring:   199 100% 25%;
+
+    --radius: 0.75rem;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  * { @apply border-border; }
+
+  html {
+    /* Optical sizing para Fraunces (Zodiak alt) */
+    font-optical-sizing: auto;
+  }
+
+  body {
+    @apply bg-tq-cream text-foreground font-body antialiased;
+    background-image:
+      radial-gradient(rgba(0, 68, 107, 0.04) 1px, transparent 1px);
+    background-size: 24px 24px;
+    background-attachment: fixed;
+    font-feature-settings: "ss01", "cv11";
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display text-tq-ink;
+    font-feature-settings: "ss01", "ss02";
+    letter-spacing: -0.01em;
+  }
+  h1 { font-weight: 600; }
+  h2, h3 { font-weight: 500; }
+
+  /* Selección con tono dorado de la marca */
+  ::selection { background: rgba(200, 161, 100, 0.35); color: #003B58; }
+
+  /* Scrollbar refinado */
+  ::-webkit-scrollbar       { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #00557F40, #00557F20);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: #00557F60; }
+
+  /* Foco accesible y de marca */
+  :focus-visible {
+    outline: 2px solid #0099F2;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+@layer components {
+  /* ── Tipografía editorial ─────────────────────────────── */
+  .tq-eyebrow {
+    @apply inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.22em] font-semibold text-tq-ink/60;
+  }
+  .tq-eyebrow::before {
+    content: "";
+    @apply block w-6 h-px bg-tq-gold;
+  }
+
+  .tq-headline {
+    @apply font-display font-medium text-tq-ink leading-[1.05] tracking-tight;
+  }
+
+  .tq-rule-gold {
+    @apply block h-px w-12 bg-tq-gold;
+  }
+
+  /* ── Cards ────────────────────────────────────────────── */
+  .tq-card {
+    @apply bg-white/90 backdrop-blur-sm rounded-2xl border border-tq-ink/10 shadow-tq-soft
+           transition-all duration-300;
+  }
+  .tq-card:hover {
+    @apply shadow-tq-card -translate-y-px;
+  }
+
+  .kpi-card {
+    @apply bg-white rounded-2xl border border-tq-ink/10 shadow-tq-soft p-5
+           hover:shadow-tq-card transition-all duration-300 relative overflow-hidden;
+  }
+  .kpi-card::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #C8A164, transparent);
+    opacity: 0;
+    transition: opacity 300ms;
+  }
+  .kpi-card:hover::before { opacity: 1; }
+
+  /* ── Sidebar (Snorkel Blue profundo) ──────────────────── */
+  .tq-sidebar {
+    /* Snorkel profundo: garantiza contraste AA con texto blanco/crema */
+    background:
+      linear-gradient(180deg, #003B58 0%, #00446B 55%, #00557F 100%);
+  }
+  .tq-sidebar::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 18px 18px;
+    pointer-events: none;
+  }
+
+  .sidebar-nav-item {
+    @apply relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium
+           text-white/65 hover:bg-white/10 hover:text-white
+           transition-all duration-200 cursor-pointer select-none;
+  }
+  .sidebar-nav-item-active {
+    @apply text-white bg-white/10;
+  }
+  .sidebar-nav-item-active::before {
+    content: "";
+    position: absolute;
+    left: -12px;
+    top: 18%;
+    bottom: 18%;
+    width: 3px;
+    border-radius: 0 4px 4px 0;
+    background: linear-gradient(180deg, #C8A164, #B08A4D);
+    box-shadow: 0 0 12px rgba(200, 161, 100, 0.5);
+  }
+  .sidebar-nav-item-active .sidebar-icon {
+    color: #C8A164;
+  }
+
+  /* ── Badges & estados ─────────────────────────────────── */
+  .badge-gold {
+    @apply inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold
+           bg-tq-gold/15 text-tq-gold2 border border-tq-gold/30;
+  }
+  .badge-silver {
+    @apply inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold
+           bg-tq-ink/10 text-tq-ink border border-tq-ink/15;
+  }
+  .badge-sky {
+    @apply inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold
+           bg-tq-sky/10 text-tq-sky border border-tq-sky/25;
+  }
+
+  /* Empty / skeleton */
+  .empty-state {
+    @apply flex flex-col items-center justify-center py-16 text-center gap-4;
+  }
+  .skeleton {
+    background: linear-gradient(90deg, #E8E3DF 0%, #F4F1ED 50%, #E8E3DF 100%);
+    background-size: 200% 100%;
+    @apply rounded-lg animate-tq-shimmer;
+  }
+
+  /* ── Botón "joya" (gold) ──────────────────────────────── */
+  .btn-jewel {
+    @apply relative inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full
+           text-sm font-semibold text-tq-ink overflow-hidden
+           bg-gradient-to-b from-tq-gold to-tq-gold2 shadow-tq-gold
+           transition-all duration-300 hover:scale-[1.02] active:scale-[0.98];
+  }
+  .btn-jewel::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.4) 50%, transparent 70%);
+    transform: translateX(-100%);
+    transition: transform 700ms;
+  }
+  .btn-jewel:hover::after { transform: translateX(100%); }
+
+  /* ── Hairline decorativo (filete dorado de joyería) ───── */
+  .tq-hairline {
+    background: linear-gradient(90deg, transparent, #C8A164 20%, #C8A164 80%, transparent);
+    height: 1px;
+  }
+
+  /* ── Login: aurora editorial. Base Snorkel para AA con tipografía cream */
+  .tq-aurora {
+    background:
+      radial-gradient(at 18% 18%, rgba(0, 153, 242, 0.45) 0, transparent 55%),
+      radial-gradient(at 85% 85%, rgba(200, 161, 100, 0.30) 0, transparent 45%),
+      radial-gradient(at 60% 40%, rgba(0, 85, 127, 0.92) 0, transparent 60%),
+      linear-gradient(135deg, #00446B 0%, #00557F 50%, #003B58 100%);
+  }
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  .hover-lift {
+    @apply transition-transform duration-300 hover:-translate-y-0.5;
   }
+  .fade-in   { animation: fadeIn 280ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+  .slide-up  { animation: slideUp 360ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+  .text-balance { text-wrap: balance; }
+
+  /* Pequeño grain procedural sobre superficies oscuras */
+  .tq-noise {
+    position: relative;
+  }
+  .tq-noise::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.18 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    opacity: 0.6;
+  }
+
+  .stagger > * { animation: slideUp 380ms cubic-bezier(0.2,0.8,0.2,1) both; }
+  .stagger > *:nth-child(1) { animation-delay: 40ms; }
+  .stagger > *:nth-child(2) { animation-delay: 90ms; }
+  .stagger > *:nth-child(3) { animation-delay: 140ms; }
+  .stagger > *:nth-child(4) { animation-delay: 190ms; }
+  .stagger > *:nth-child(5) { animation-delay: 240ms; }
+  .stagger > *:nth-child(6) { animation-delay: 290ms; }
+  .stagger > *:nth-child(7) { animation-delay: 340ms; }
+  .stagger > *:nth-child(8) { animation-delay: 390ms; }
 }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Leaflet overrides ─────────────────────────────────── */
+.tq-map-pin { background: transparent !important; border: 0 !important; }
+.leaflet-popup-content-wrapper {
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,68,107,0.18);
+  border: 1px solid rgba(0,85,127,0.12);
+}
+.leaflet-popup-content { margin: 12px 14px; font-family: var(--font-body); }
+.leaflet-popup-tip { box-shadow: 0 8px 24px rgba(0,68,107,0.12); }
+.leaflet-container { font-family: var(--font-body); }
