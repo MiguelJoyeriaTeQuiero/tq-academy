@@ -59,7 +59,7 @@ export default async function CursosAdminPage() {
       <div className="relative bg-white rounded-2xl border border-tq-ink/10 shadow-tq-soft overflow-hidden">
         <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-tq-gold/40 to-transparent" />
 
-        <div className="hidden md:grid grid-cols-[3rem_1.6fr_1.2fr_4rem_1fr_8rem] items-center gap-4 px-6 py-3.5 border-b border-tq-ink/10 text-[10px] uppercase tracking-[0.22em] text-tq-ink/45 font-semibold">
+        <div className="hidden md:grid grid-cols-[3rem_1.6fr_1.2fr_4rem_1fr_8rem] items-center gap-4 px-4 sm:px-6 py-3.5 border-b border-tq-ink/10 text-[10px] uppercase tracking-[0.22em] text-tq-ink/45 font-semibold">
           <span>#</span>
           <span>Curso</span>
           <span>Ruta</span>
@@ -84,7 +84,7 @@ export default async function CursosAdminPage() {
               return (
                 <li
                   key={c.id}
-                  className="grid grid-cols-[1fr_8rem] md:grid-cols-[3rem_1.6fr_1.2fr_4rem_1fr_8rem] items-center gap-4 px-6 py-3.5 hover:bg-tq-paper/40 transition-colors"
+                  className="grid grid-cols-[1fr_8rem] md:grid-cols-[3rem_1.6fr_1.2fr_4rem_1fr_8rem] items-center gap-4 px-4 sm:px-6 py-3.5 hover:bg-tq-paper/40 transition-colors"
                 >
                   <span className="hidden md:block font-display text-2xl text-tq-ink/25 tabular-nums leading-none">
                     {String(i + 1).padStart(2, "0")}

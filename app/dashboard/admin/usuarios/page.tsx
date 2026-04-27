@@ -80,7 +80,7 @@ export default async function UsuariosPage() {
         <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-tq-gold/40 to-transparent" />
 
         {/* head row */}
-        <div className="hidden md:grid grid-cols-[1.4fr_1.4fr_0.9fr_1fr_1fr_0.7fr_2.5rem] items-center gap-4 px-6 py-3.5 border-b border-tq-ink/10 text-[10px] uppercase tracking-[0.22em] text-tq-ink/45 font-semibold">
+        <div className="hidden md:grid grid-cols-[1.4fr_1.4fr_0.9fr_1fr_1fr_0.7fr_2.5rem] items-center gap-4 px-4 sm:px-6 py-3.5 border-b border-tq-ink/10 text-[10px] uppercase tracking-[0.22em] text-tq-ink/45 font-semibold">
           <span>Empleado</span>
           <span>Email</span>
           <span>Rol</span>
@@ -107,7 +107,7 @@ export default async function UsuariosPage() {
               return (
                 <li
                   key={u.id}
-                  className="grid grid-cols-[1fr_2.5rem] md:grid-cols-[1.4fr_1.4fr_0.9fr_1fr_1fr_0.7fr_2.5rem] items-center gap-4 px-6 py-3.5 hover:bg-tq-paper/40 transition-colors"
+                  className="grid grid-cols-[1fr_2.5rem] md:grid-cols-[1.4fr_1.4fr_0.9fr_1fr_1fr_0.7fr_2.5rem] items-center gap-4 px-4 sm:px-6 py-3.5 hover:bg-tq-paper/40 transition-colors"
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <div className="w-9 h-9 rounded-full bg-gradient-to-br from-tq-sky to-tq-ink flex items-center justify-center text-white text-[11px] font-semibold flex-shrink-0 ring-1 ring-tq-gold/20">

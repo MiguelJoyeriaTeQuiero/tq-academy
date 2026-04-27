@@ -42,7 +42,7 @@ export function DashboardLayout({
           pageTitle={pageTitle}
         />
         <main className="flex-1 overflow-y-auto">
-          <div className="p-6 lg:p-8 max-w-[1400px] mx-auto fade-in">
+          <div className="p-4 sm:p-6 lg:p-8 max-w-[1400px] mx-auto fade-in">
             {children}
           </div>
         </main>
