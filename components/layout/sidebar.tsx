@@ -27,6 +27,7 @@ import {
   UserCircle2,
   LifeBuoy,
   Route,
+  Compass,
 } from "lucide-react";
 import type { UserRol } from "@/types/database";
 
@@ -45,6 +46,7 @@ const NAV_ITEMS: NavItem[] = [
   { label: "Tiendas",       href: "/dashboard/admin/tiendas",     icon: Building2,       roles: ["super_admin", "admin_rrhh"] },
   { label: "Departamentos", href: "/dashboard/admin/departamentos",icon: FolderOpen,     roles: ["super_admin", "admin_rrhh"] },
   { label: "DPT",           href: "/dashboard/admin/dpt",          icon: BadgeCheck,     roles: ["super_admin", "admin_rrhh"] },
+  { label: "Planes de carrera", href: "/dashboard/admin/planes-carrera", icon: Compass,   roles: ["super_admin", "admin_rrhh"] },
   { label: "Cursos",        href: "/dashboard/admin/cursos",       icon: BookOpen,       roles: ["super_admin", "admin_rrhh"] },
   { label: "Rutas de aprendizaje", href: "/dashboard/admin/rutas",  icon: Route,          roles: ["super_admin", "admin_rrhh"] },
   { label: "Exámenes mensuales", href: "/dashboard/admin/examenes-mensuales", icon: Sparkles,  roles: ["super_admin", "admin_rrhh"] },
@@ -57,6 +59,7 @@ const NAV_ITEMS: NavItem[] = [
   // ── Empleado ───────────────────────────────────────────
   { label: "Mis cursos",    href: "/dashboard/empleado",              icon: LayoutDashboard, roles: ["empleado", "manager"] },
   { label: "Mis rutas",     href: "/dashboard/empleado/rutas",        icon: Route,           roles: ["empleado", "manager"] },
+  { label: "Mi carrera",    href: "/dashboard/empleado/mi-carrera",   icon: Compass,         roles: ["empleado", "manager"] },
   { label: "Catálogo",      href: "/dashboard/empleado/catalogo",     icon: BookOpen,        roles: ["empleado", "manager"] },
   { label: "Mis logros",    href: "/dashboard/empleado/logros",       icon: Trophy,          roles: ["empleado", "manager"] },
   { label: "Examen mensual",href: "/dashboard/empleado/examenes-mensuales", icon: Sparkles,   roles: ["empleado", "manager"] },
