@@ -5,7 +5,6 @@ import {
   BookOpen,
   CheckCircle2,
   ClipboardCheck,
-  Clock,
   Compass,
   GraduationCap,
   ListChecks,
@@ -24,13 +23,27 @@ import {
   type CareerPath,
   type CompetenciaTeaDelta,
 } from "@/lib/career-paths";
+import type {
+  PlanCarreraAsignacion,
+  PlanCarreraHitoProgreso,
+} from "@/types/database";
+import { HitosTimeline } from "./hitos-timeline";
 
 interface Props {
   plan: CareerPath;
   mode: "admin" | "empleado";
+  asignacion?: PlanCarreraAsignacion | null;
+  progresoHitos?: PlanCarreraHitoProgreso[] | null;
+  progresoPct?: number;
 }
 
-export function CareerPathDetail({ plan, mode }: Props) {
+export function CareerPathDetail({
+  plan,
+  mode,
+  asignacion,
+  progresoHitos,
+  progresoPct,
+}: Props) {
   const from = getDPT(plan.fromSlug)!;
   const to = getDPT(plan.toSlug)!;
   const gap = computeGap(plan.fromSlug, plan.toSlug)!;
@@ -138,32 +151,26 @@ export function CareerPathDetail({ plan, mode }: Props) {
             </div>
           </header>
 
-          <ol className="p-5 sm:p-7 space-y-6">
-            {plan.hitos.map((h, i) => (
-              <li key={i} className="relative pl-10">
-                <span className="absolute left-0 top-0 w-7 h-7 rounded-full bg-tq-ink text-white font-display text-sm flex items-center justify-center tabular-nums shadow-tq-soft">
-                  {i + 1}
-                </span>
-                {i < plan.hitos.length - 1 && (
-                  <span className="absolute left-[13px] top-8 bottom-[-1.5rem] w-px bg-gradient-to-b from-tq-ink/30 via-tq-gold/40 to-tq-ink/10" />
-                )}
-                <div className="flex items-start justify-between gap-4 flex-wrap">
-                  <h3 className="font-display text-lg text-tq-ink leading-tight">
-                    {h.titulo}
-                  </h3>
-                  {h.duracion && (
-                    <span className="text-[10px] uppercase tracking-[0.22em] text-tq-gold2 font-semibold ring-1 ring-tq-gold/40 bg-tq-gold/10 px-2 py-0.5 rounded-full inline-flex items-center gap-1">
-                      <Clock className="w-3 h-3" />
-                      {h.duracion}
-                    </span>
-                  )}
-                </div>
-                <p className="mt-2 text-sm text-tq-ink/70 leading-relaxed">
-                  {h.detalle}
-                </p>
-              </li>
-            ))}
-          </ol>
+          <HitosTimeline
+            hitos={plan.hitos}
+            asignacionId={asignacion?.id}
+            progresos={progresoHitos ?? undefined}
+            readonly={mode !== "empleado"}
+          />
+          {typeof progresoPct === "number" && asignacion && (
+            <div className="px-5 sm:px-7 pb-5">
+              <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.22em] font-semibold text-tq-ink/55 mb-2">
+                <span>Progreso del plan</span>
+                <span className="tabular-nums text-tq-ink">{progresoPct}%</span>
+              </div>
+              <div className="h-2 rounded-full bg-tq-ink/10 overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-tq-sky via-tq-gold to-tq-gold2 transition-all duration-500"
+                  style={{ width: `${progresoPct}%` }}
+                />
+              </div>
+            </div>
+          )}
         </section>
 
         {/* Side panel: requisitos clave */}

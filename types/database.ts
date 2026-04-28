@@ -6,6 +6,7 @@
 export type UserRol = "super_admin" | "admin_rrhh" | "manager" | "empleado";
 export type LeccionTipo = "video" | "pdf" | "quiz" | "scorm";
 export type TipoDestino = "usuario" | "tienda" | "departamento";
+export type PlanCarreraEstado = "activo" | "pausado" | "completado" | "cancelado";
 
 // ---- Interfaces de entidades (tipos completos de Row) ----
 
@@ -19,7 +20,34 @@ export interface Profile {
   departamento_id: string | null;
   avatar_url: string | null;
   activo: boolean;
+  dpt_actual_slug: string | null;
   created_at: string;
+  updated_at: string;
+}
+
+export interface PlanCarreraAsignacion {
+  id: string;
+  usuario_id: string;
+  path_slug: string;
+  asignado_por: string | null;
+  fecha_inicio: string;
+  fecha_objetivo: string | null;
+  estado: PlanCarreraEstado;
+  notas: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PlanCarreraHitoProgreso {
+  id: string;
+  asignacion_id: string;
+  hito_index: number;
+  completado: boolean;
+  fecha_completado: string | null;
+  marcado_por: string | null;
+  validado_por: string | null;
+  fecha_validado: string | null;
+  evidencia: string | null;
   updated_at: string;
 }
 
@@ -319,6 +347,7 @@ export type Database = {
           departamento_id?: string | null;
           avatar_url?: string | null;
           activo?: boolean;
+          dpt_actual_slug?: string | null;
         };
         Update: {
           email?: string;
@@ -329,6 +358,7 @@ export type Database = {
           departamento_id?: string | null;
           avatar_url?: string | null;
           activo?: boolean;
+          dpt_actual_slug?: string | null;
         };
         Relationships: [];
       };
@@ -701,6 +731,50 @@ export type Database = {
         };
         Relationships: [];
       };
+      plan_carrera_asignaciones: {
+        Row: PlanCarreraAsignacion & Record<string, unknown>;
+        Insert: {
+          id?: string;
+          usuario_id: string;
+          path_slug: string;
+          asignado_por?: string | null;
+          fecha_inicio?: string;
+          fecha_objetivo?: string | null;
+          estado?: PlanCarreraEstado;
+          notas?: string | null;
+        };
+        Update: {
+          path_slug?: string;
+          fecha_inicio?: string;
+          fecha_objetivo?: string | null;
+          estado?: PlanCarreraEstado;
+          notas?: string | null;
+        };
+        Relationships: [];
+      };
+      plan_carrera_hito_progreso: {
+        Row: PlanCarreraHitoProgreso & Record<string, unknown>;
+        Insert: {
+          id?: string;
+          asignacion_id: string;
+          hito_index: number;
+          completado?: boolean;
+          fecha_completado?: string | null;
+          marcado_por?: string | null;
+          validado_por?: string | null;
+          fecha_validado?: string | null;
+          evidencia?: string | null;
+        };
+        Update: {
+          completado?: boolean;
+          fecha_completado?: string | null;
+          marcado_por?: string | null;
+          validado_por?: string | null;
+          fecha_validado?: string | null;
+          evidencia?: string | null;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       [key: string]: {
@@ -724,6 +798,7 @@ export type Database = {
       user_rol: UserRol;
       leccion_tipo: LeccionTipo;
       tipo_destino: TipoDestino;
+      plan_carrera_estado: PlanCarreraEstado;
     };
     CompositeTypes: {
       [_ in never]: never;
