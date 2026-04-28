@@ -18,8 +18,6 @@ import {
 } from "lucide-react";
 import { DPTS, getDPT } from "@/lib/dpt-data";
 
-export const dynamic = "force-static";
-
 export function generateStaticParams() {
   return DPTS.map((d) => ({ slug: d.slug }));
 }

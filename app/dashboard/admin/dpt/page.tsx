@@ -7,8 +7,6 @@ import {
 import { DPTS } from "@/lib/dpt-data";
 import { DPTGrid } from "./dpt-grid";
 
-export const dynamic = "force-static";
-
 export default function DPTIndexPage() {
   const total = DPTS.length;
   const departamentos = new Set(DPTS.map((d) => d.departamento)).size;
