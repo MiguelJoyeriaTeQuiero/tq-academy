@@ -164,7 +164,7 @@ export function ChecklistRunner({ visita, plantilla, respuestasMap: initialMap, 
         <div className="flex items-center justify-between mb-2">
           <div>
             <p className="text-xs text-tq-ink/50 uppercase tracking-wider font-semibold">
-              {(visita.tienda as any)?.nombre}
+              {visita.tienda.nombre}
             </p>
             <h1 className="text-lg font-semibold text-tq-ink leading-tight">
               {plantilla.nombre}

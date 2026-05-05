@@ -48,8 +48,9 @@ export default async function PlantillasPage() {
       ) : (
         <div className="grid gap-3">
           {plantillas.map((p) => {
-            const totalItems = p.checklist_secciones?.reduce(
-              (acc: number, s: any) => acc + (s.checklist_items?.length ?? 0),
+            const secciones = (p.checklist_secciones as unknown as { checklist_items?: unknown[] }[] | null);
+            const totalItems = secciones?.reduce(
+              (acc: number, s) => acc + (s.checklist_items?.length ?? 0),
               0
             ) ?? 0;
             return (

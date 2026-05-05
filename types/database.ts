@@ -883,6 +883,103 @@ export type Database = {
         };
         Relationships: [];
       };
+      checklist_plantillas: {
+        Row: ChecklistPlantilla & Record<string, unknown>;
+        Insert: {
+          id?: string;
+          nombre: string;
+          descripcion?: string | null;
+          activo?: boolean;
+          created_by: string;
+        };
+        Update: {
+          nombre?: string;
+          descripcion?: string | null;
+          activo?: boolean;
+        };
+        Relationships: [];
+      };
+      checklist_secciones: {
+        Row: ChecklistSeccion & Record<string, unknown>;
+        Insert: {
+          id?: string;
+          plantilla_id: string;
+          nombre: string;
+          orden?: number;
+        };
+        Update: {
+          nombre?: string;
+          orden?: number;
+        };
+        Relationships: [];
+      };
+      checklist_items: {
+        Row: ChecklistItem & Record<string, unknown>;
+        Insert: {
+          id?: string;
+          seccion_id: string;
+          texto: string;
+          orden?: number;
+        };
+        Update: {
+          texto?: string;
+          orden?: number;
+        };
+        Relationships: [];
+      };
+      visitas_tienda: {
+        Row: VisitaTienda & Record<string, unknown>;
+        Insert: {
+          id?: string;
+          tienda_id: string;
+          admin_id: string;
+          plantilla_id: string;
+          fecha_visita: string;
+          estado?: VisitaEstado;
+          notas_generales?: string | null;
+          requiere_seguimiento?: boolean;
+          proxima_visita?: string | null;
+        };
+        Update: {
+          estado?: VisitaEstado;
+          notas_generales?: string | null;
+          requiere_seguimiento?: boolean;
+          proxima_visita?: string | null;
+        };
+        Relationships: [];
+      };
+      visita_respuestas: {
+        Row: VisitaRespuesta & Record<string, unknown>;
+        Insert: {
+          id?: string;
+          visita_id: string;
+          item_id: string;
+          estado?: RespuestaEstado | null;
+          notas?: string | null;
+        };
+        Update: {
+          estado?: RespuestaEstado | null;
+          notas?: string | null;
+        };
+        Relationships: [];
+      };
+      visita_adjuntos: {
+        Row: VisitaAdjunto & Record<string, unknown>;
+        Insert: {
+          id?: string;
+          visita_id: string;
+          tipo: AdjuntoTipo;
+          storage_path: string;
+          url: string;
+          nombre?: string | null;
+          tamano_bytes?: number | null;
+        };
+        Update: {
+          url?: string;
+          nombre?: string | null;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       [key: string]: {

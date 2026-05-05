@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import {
-  CheckCircle2, AlertTriangle, MinusCircle, Store,
+  CheckCircle2, AlertTriangle, MinusCircle,
   CalendarClock, ArrowLeft, Image as ImageIcon, Video,
   ClipboardCheck, FileText,
 } from "lucide-react";

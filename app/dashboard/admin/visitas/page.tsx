@@ -68,16 +68,15 @@ export default async function VisitasPage() {
   ]);
 
   // KPIs
-  const completadas = visitas?.filter((v) => v.estado === "completada") ?? [];
   const incidenciasAbiertas = visitas?.reduce((acc, v) => {
     if (v.estado !== "completada") return acc;
-    return acc + ((v.respuestas as any[])?.filter((r) => r.estado === "incidencia").length ?? 0);
+    return acc + ((v.respuestas as unknown as { estado: string }[])?.filter((r) => r.estado === "incidencia").length ?? 0);
   }, 0) ?? 0;
 
   const tiendasConVisitaMes = new Set(
     visitas
       ?.filter((v) => v.fecha_visita >= inicioMes)
-      .map((v) => (v.tienda as any)?.nombre)
+      .map((v) => (v.tienda as unknown as { nombre: string } | null)?.nombre)
   ).size;
 
   const seguimientosPendientes = visitas?.filter(
@@ -171,7 +170,7 @@ export default async function VisitasPage() {
           <div className="space-y-2">
             {proximasVisitas?.map((v) => (
               <div key={v.id} className="flex items-center justify-between py-2 border-b border-tq-ink/6 last:border-0">
-                <span className="text-sm text-tq-ink">{(v.tienda as any)?.nombre}</span>
+                <span className="text-sm text-tq-ink">{(v.tienda as unknown as { nombre: string } | null)?.nombre}</span>
                 <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
                   diasHasta(v.proxima_visita!).startsWith("hace")
                     ? "bg-red-100 text-red-700"
@@ -198,8 +197,7 @@ export default async function VisitasPage() {
         ) : (
           <div className="grid gap-2">
             {visitas.map((v) => {
-              const respuestas = (v.respuestas as any[]) ?? [];
-              const totalResp = respuestas.length;
+              const respuestas = (v.respuestas as unknown as { estado: string }[]) ?? [];
               const nIncidencias = respuestas.filter((r) => r.estado === "incidencia").length;
 
               return (
@@ -219,11 +217,11 @@ export default async function VisitasPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <span className="font-medium text-tq-ink text-sm truncate">
-                        {(v.tienda as any)?.nombre}
+                        {(v.tienda as unknown as { nombre: string } | null)?.nombre}
                       </span>
                       <span className="text-tq-ink/40 text-xs hidden sm:inline">·</span>
                       <span className="text-tq-ink/50 text-xs hidden sm:inline truncate">
-                        {(v.plantilla as any)?.nombre}
+                        {(v.plantilla as unknown as { nombre: string } | null)?.nombre}
                       </span>
                     </div>
                     <div className="flex items-center gap-3 mt-0.5">

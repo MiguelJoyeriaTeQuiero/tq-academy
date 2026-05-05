@@ -118,20 +118,23 @@ export default async function FichaUsuarioPage({ params }: { params: { id: strin
   if (!usuario) notFound();
 
   const fullName = `${usuario.nombre ?? ""} ${usuario.apellido ?? ""}`.trim() || usuario.email;
-  const tienda = (usuario.tiendas as any)?.nombre ?? null;
-  const isla = (usuario.tiendas as any)?.isla ?? null;
-  const depto = (usuario.departamentos as any)?.nombre ?? null;
+  type TiendaInfo = { nombre: string; isla: string };
+  type DeptoInfo = { nombre: string };
+  type CursoInfo = { id: string; titulo: string; imagen_url: string | null; activo: boolean };
+  const tienda = (usuario.tiendas as unknown as TiendaInfo | null)?.nombre ?? null;
+  const isla = (usuario.tiendas as unknown as TiendaInfo | null)?.isla ?? null;
+  const depto = (usuario.departamentos as unknown as DeptoInfo | null)?.nombre ?? null;
 
   // Construir lista unificada de cursos
-  const progMap = new Map((progresoCursos ?? []).map((p) => [(p.cursos as any)?.id, p]));
-  const asigMap = new Map((asignacionesDirectas ?? []).map((a) => [(a.cursos as any)?.id, a]));
+  const progMap = new Map((progresoCursos ?? []).map((p) => [(p.cursos as unknown as CursoInfo | null)?.id, p]));
+  const asigMap = new Map((asignacionesDirectas ?? []).map((a) => [(a.cursos as unknown as CursoInfo | null)?.id, a]));
 
   // Todos los cursos únicos (con o sin progreso)
-  const cursosIds = new Set([...progMap.keys(), ...asigMap.keys()].filter(Boolean));
+  const cursosIds = new Set<string>([...progMap.keys(), ...asigMap.keys()].filter((id): id is string => !!id));
   const cursos = Array.from(cursosIds).map((id) => {
     const prog = progMap.get(id);
     const asig = asigMap.get(id);
-    const curso = (prog?.cursos ?? asig?.cursos) as any;
+    const curso = (prog?.cursos ?? asig?.cursos) as unknown as CursoInfo | null;
     return { id, titulo: curso?.titulo ?? "—", imagen_url: curso?.imagen_url ?? null, progreso: prog ?? null, asignacion: asig ?? null };
   });
 
@@ -312,7 +315,7 @@ export default async function FichaUsuarioPage({ params }: { params: { id: strin
                     <Award className="w-4 h-4 text-tq-gold2" />
                   </div>
                   <div className="min-w-0">
-                    <p className="text-sm font-medium text-tq-ink truncate">{(cert.cursos as any)?.titulo ?? "—"}</p>
+                    <p className="text-sm font-medium text-tq-ink truncate">{(cert.cursos as unknown as { titulo: string } | null)?.titulo ?? "—"}</p>
                     <p className="text-xs text-tq-ink/50">{formatFechaCorta(cert.fecha_emision)}</p>
                   </div>
                 </div>
@@ -400,7 +403,8 @@ function InfoChip({ icon: Icon, label, sub }: { icon: React.ElementType; label: 
   );
 }
 
-function CursoRow({ curso }: { curso: { id: string; titulo: string; imagen_url: string | null; progreso: any; asignacion: any } }) {
+type ProgresoRow = { porcentaje: number; completado: boolean; fecha_completado?: string | null } | null;
+function CursoRow({ curso }: { curso: { id: string; titulo: string; imagen_url: string | null; progreso: ProgresoRow; asignacion: { fecha_limite?: string | null; obligatorio?: boolean } | null } }) {
   const pct = curso.progreso?.porcentaje ?? 0;
   const completado = curso.progreso?.completado ?? false;
   const sinIniciar = !curso.progreso;

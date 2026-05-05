@@ -2,7 +2,6 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-import type { ChecklistItem, ChecklistSeccion } from "@/types/database";
 
 // ── Plantillas ─────────────────────────────────────────────────
 
