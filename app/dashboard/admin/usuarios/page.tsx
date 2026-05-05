@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
-import { UserPlus, Users, Shield, UserCheck, GraduationCap } from "lucide-react";
+import { UserPlus, Users, Shield, UserCheck, GraduationCap, ArrowRight } from "lucide-react";
 import { UserActionsMenu } from "@/components/admin/user-actions-menu";
 
 export const dynamic = "force-dynamic";
@@ -109,19 +109,23 @@ export default async function UsuariosPage() {
                   key={u.id}
                   className="grid grid-cols-[1fr_2.5rem] md:grid-cols-[1.4fr_1.4fr_0.9fr_1fr_1fr_0.7fr_2.5rem] items-center gap-4 px-4 sm:px-6 py-3.5 hover:bg-tq-paper/40 transition-colors"
                 >
-                  <div className="flex items-center gap-3 min-w-0">
+                  <Link
+                    href={`/dashboard/admin/usuarios/${u.id}`}
+                    className="flex items-center gap-3 min-w-0 group/name"
+                  >
                     <div className="w-9 h-9 rounded-full bg-gradient-to-br from-tq-sky to-tq-ink flex items-center justify-center text-white text-[11px] font-semibold flex-shrink-0 ring-1 ring-tq-gold/20">
                       {initials(fullName)}
                     </div>
                     <div className="min-w-0">
-                      <p className="font-display text-sm text-tq-ink truncate leading-tight">
+                      <p className="font-display text-sm text-tq-ink truncate leading-tight group-hover/name:text-tq-sky transition-colors">
                         {fullName}
                       </p>
                       <p className="md:hidden text-[11px] text-tq-ink/55 truncate">
                         {u.email}
                       </p>
                     </div>
-                  </div>
+                    <ArrowRight className="w-3.5 h-3.5 text-tq-ink/20 group-hover/name:text-tq-sky transition-colors ml-auto hidden md:block" />
+                  </Link>
                   <span className="hidden md:block text-sm text-tq-ink/65 truncate">
                     {u.email}
                   </span>

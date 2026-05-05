@@ -29,13 +29,13 @@ function getDefaultRoute(rol: UserRol): string {
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  // Permitir rutas públicas sin verificación
-  if (PUBLIC_ROUTES.some((route) => pathname.startsWith(route))) {
-    return NextResponse.next();
-  }
-
-  // Obtener sesión actualizada
+  // Siempre actualizar sesión para que las cookies caducadas se limpien
   const { supabaseResponse, user, supabase } = await updateSession(request);
+
+  // Permitir rutas públicas (devolvemos supabaseResponse para propagar cookies limpias)
+  if (PUBLIC_ROUTES.some((route) => pathname.startsWith(route))) {
+    return supabaseResponse;
+  }
 
   // Si no hay usuario y la ruta requiere auth → login
   if (!user) {

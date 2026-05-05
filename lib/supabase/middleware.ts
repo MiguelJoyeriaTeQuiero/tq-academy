@@ -26,10 +26,11 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
-  // Refrescar sesión — no borrar esta llamada
+  // Refrescar sesión — no borrar esta llamada.
+  // getUser() limpia automáticamente las cookies cuando el refresh token ha caducado.
   const {
     data: { user },
-  } = await supabase.auth.getUser();
+  } = await supabase.auth.getUser().catch(() => ({ data: { user: null } }));
 
   return { supabaseResponse, user, supabase };
 }

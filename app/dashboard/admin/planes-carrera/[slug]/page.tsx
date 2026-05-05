@@ -1,8 +1,9 @@
 import { notFound } from "next/navigation";
 import { CareerPathDetail } from "@/components/career/career-path-detail";
 import { AdminAssignPlan } from "@/components/career/admin-assign-plan";
+import { AdminLinkCursosHitos } from "@/components/career/admin-link-cursos-hitos";
 import { getPath } from "@/lib/career-paths";
-import { getAsignacionesAdmin } from "@/lib/career-paths-server";
+import { getAsignacionesAdmin, getHitoCursosByPath } from "@/lib/career-paths-server";
 import { createClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -17,15 +18,27 @@ export default async function PlanDeCarreraPage({
 
   const supabase = createClient();
 
-  const [{ data: empleados }, asignaciones] = await Promise.all([
-    supabase
-      .from("profiles")
-      .select("id, nombre, apellido, email")
-      .eq("activo", true)
-      .in("rol", ["empleado", "manager"])
-      .order("nombre"),
-    getAsignacionesAdmin({ pathSlug: params.slug }),
-  ]);
+  const [{ data: empleados }, { data: cursos }, asignaciones, vinculos] =
+    await Promise.all([
+      supabase
+        .from("profiles")
+        .select("id, nombre, apellido, email")
+        .eq("activo", true)
+        .in("rol", ["empleado", "manager"])
+        .order("nombre"),
+      supabase
+        .from("cursos")
+        .select("id, titulo")
+        .eq("activo", true)
+        .order("titulo"),
+      getAsignacionesAdmin({ pathSlug: params.slug }),
+      getHitoCursosByPath(params.slug),
+    ]);
+
+  const cursosOptions = (cursos ?? []).map((c) => ({
+    id: c.id as string,
+    titulo: (c.titulo as string) ?? "",
+  }));
 
   const empleadosOptions = (empleados ?? []).map((e) => ({
     id: e.id as string,
@@ -50,6 +63,12 @@ export default async function PlanDeCarreraPage({
   return (
     <div className="space-y-7">
       <CareerPathDetail plan={plan} mode="admin" />
+      <AdminLinkCursosHitos
+        pathSlug={params.slug}
+        hitos={plan.hitos}
+        cursos={cursosOptions}
+        vinculos={vinculos}
+      />
       <AdminAssignPlan
         pathSlug={params.slug}
         empleados={empleadosOptions}

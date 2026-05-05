@@ -22,6 +22,7 @@ import {
   UserCheck,
   ClipboardList,
   BadgeCheck,
+  ClipboardCheck,
   Bell,
   Sparkles,
   UserCircle2,
@@ -51,6 +52,7 @@ const NAV_ITEMS: NavItem[] = [
   { label: "Rutas de aprendizaje", href: "/dashboard/admin/rutas",  icon: Route,          roles: ["super_admin", "admin_rrhh"] },
   { label: "Exámenes mensuales", href: "/dashboard/admin/examenes-mensuales", icon: Sparkles,  roles: ["super_admin", "admin_rrhh"] },
   { label: "Notificaciones",href: "/dashboard/admin/notificaciones", icon: Bell,         roles: ["super_admin", "admin_rrhh"] },
+  { label: "Visitas tienda", href: "/dashboard/admin/visitas",       icon: ClipboardCheck,  roles: ["super_admin", "admin_rrhh"] },
   { label: "Reportes",      href: "/dashboard/admin/reportes",     icon: BarChart3,      roles: ["super_admin", "admin_rrhh"] },
   // ── Manager ────────────────────────────────────────────
   { label: "Dashboard",     href: "/dashboard/manager",            icon: LayoutDashboard, roles: ["manager"] },

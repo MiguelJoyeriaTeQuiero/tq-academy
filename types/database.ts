@@ -8,6 +8,91 @@ export type LeccionTipo = "video" | "pdf" | "quiz" | "scorm";
 export type TipoDestino = "usuario" | "tienda" | "departamento";
 export type PlanCarreraEstado = "activo" | "pausado" | "completado" | "cancelado";
 
+// ── Visitas a tienda ──────────────────────────────────────────
+export type VisitaEstado = "en_curso" | "completada";
+export type RespuestaEstado = "ok" | "incidencia" | "no_aplica";
+export type AdjuntoTipo = "imagen" | "video";
+
+export interface ChecklistPlantilla {
+  id: string;
+  nombre: string;
+  descripcion: string | null;
+  activo: boolean;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ChecklistSeccion {
+  id: string;
+  plantilla_id: string;
+  nombre: string;
+  orden: number;
+  created_at: string;
+}
+
+export interface ChecklistItem {
+  id: string;
+  seccion_id: string;
+  texto: string;
+  orden: number;
+  created_at: string;
+}
+
+export interface VisitaTienda {
+  id: string;
+  tienda_id: string;
+  admin_id: string;
+  plantilla_id: string;
+  fecha_visita: string;
+  estado: VisitaEstado;
+  notas_generales: string | null;
+  requiere_seguimiento: boolean;
+  proxima_visita: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface VisitaRespuesta {
+  id: string;
+  visita_id: string;
+  item_id: string;
+  estado: RespuestaEstado | null;
+  notas: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface VisitaAdjunto {
+  id: string;
+  visita_id: string;
+  tipo: AdjuntoTipo;
+  storage_path: string;
+  url: string;
+  nombre: string | null;
+  tamano_bytes: number | null;
+  created_at: string;
+}
+
+// Tipos enriquecidos para queries con joins
+export interface PlantillaConSecciones extends ChecklistPlantilla {
+  secciones: (ChecklistSeccion & { items: ChecklistItem[] })[];
+}
+
+export interface VisitaConDetalle extends VisitaTienda {
+  tienda: { nombre: string; isla: string };
+  plantilla: { nombre: string };
+  respuestas: VisitaRespuesta[];
+  adjuntos: VisitaAdjunto[];
+  _counts?: {
+    total: number;
+    ok: number;
+    incidencia: number;
+    no_aplica: number;
+    sin_respuesta: number;
+  };
+}
+
 // ---- Interfaces de entidades (tipos completos de Row) ----
 
 export interface Profile {
@@ -49,6 +134,14 @@ export interface PlanCarreraHitoProgreso {
   fecha_validado: string | null;
   evidencia: string | null;
   updated_at: string;
+}
+
+export interface PlanCarreraHitoCurso {
+  id: string;
+  path_slug: string;
+  hito_index: number;
+  curso_id: string;
+  created_at: string;
 }
 
 export interface Tienda {
@@ -772,6 +865,21 @@ export type Database = {
           validado_por?: string | null;
           fecha_validado?: string | null;
           evidencia?: string | null;
+        };
+        Relationships: [];
+      };
+      plan_carrera_hito_cursos: {
+        Row: PlanCarreraHitoCurso & Record<string, unknown>;
+        Insert: {
+          id?: string;
+          path_slug: string;
+          hito_index: number;
+          curso_id: string;
+        };
+        Update: {
+          path_slug?: string;
+          hito_index?: number;
+          curso_id?: string;
         };
         Relationships: [];
       };

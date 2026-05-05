@@ -32,7 +32,7 @@ export default function LoginPage() {
 
     try {
       const supabase = createClient();
-      const { error: authError } = await supabase.auth.signInWithPassword({
+      const { data: { user }, error: authError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
@@ -50,10 +50,6 @@ export default function LoginPage() {
         );
         return;
       }
-
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
 
       let destination = "/dashboard/empleado";
       if (user) {
@@ -115,11 +111,11 @@ export default function LoginPage() {
             <p className="tq-eyebrow text-tq-gold/90 [&::before]:bg-tq-gold">
               Desde 1988
             </p>
-            <h2 className="font-display font-light text-[clamp(2.4rem,4.4vw,4rem)] leading-[1.02] tracking-tight">
+            <h2 className="font-display font-normal text-white text-[clamp(2.4rem,4.4vw,4rem)] leading-[1.02] tracking-tight">
               Reivindicando el valor de
               <em className="italic text-tq-gold"> lo accesible</em>.
             </h2>
-            <p className="text-white/90 max-w-md leading-relaxed text-[15px]">
+            <p className="text-white/85 max-w-md leading-relaxed text-[15px]">
               Una academia interna para que cada persona del equipo Te Quiero
               brille en su tienda, conozca cada pieza y haga sentir a quien
               entra que la joyería puede ser cercana.
@@ -221,7 +217,7 @@ export default function LoginPage() {
                 </p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-5" method="POST" action="#">
+              <form onSubmit={handleSubmit} className="space-y-5" noValidate>
                 <div className="space-y-2">
                   <Label htmlFor="email" className="text-tq-ink/80 text-xs uppercase tracking-wider font-semibold">
                     Email

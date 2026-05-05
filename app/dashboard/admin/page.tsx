@@ -198,11 +198,11 @@ export default async function AdminDashboardPage() {
               <span className="w-6 h-px bg-tq-gold/70" />
               <span>{today} · {meRol}</span>
             </div>
-            <h1 className="font-display text-[2.4rem] sm:text-5xl leading-[1.05] mt-4">
+            <h1 className="font-display font-semibold text-white text-[2.4rem] sm:text-5xl leading-[1.05] mt-4">
               {greeting()},{" "}
               <span className="italic text-tq-gold">{meName}.</span>
             </h1>
-            <p className="text-white/55 text-sm mt-3 max-w-md leading-relaxed">
+            <p className="text-white/75 text-sm mt-3 max-w-md leading-relaxed">
               Esto es lo que está pasando hoy en TQ Academy · Te Quiero Group ·
               Reivindicando el valor de lo accesible desde 1988.
             </p>

@@ -53,7 +53,7 @@ export function UserActionsMenu({ userId, activo }: UserActionsMenuProps) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem asChild>
-          <Link href={`/dashboard/admin/usuarios/${userId}`}>
+          <Link href={`/dashboard/admin/usuarios/${userId}/editar`}>
             <Pencil className="w-4 h-4 mr-2" />
             Editar
           </Link>

@@ -16,10 +16,10 @@ const config: Config = {
     },
     extend: {
       fontFamily: {
-        // Display serif (alternativa libre a Zodiak del manual)
-        display: ["var(--font-display)", "ui-serif", "Georgia", ...fontFamily.serif],
-        heading: ["var(--font-display)", "ui-serif", ...fontFamily.serif],
-        // Cuerpo y nombre marca: Poppins (oficial del manual)
+        // Titulares: Montserrat
+        display: ["var(--font-display)", ...fontFamily.sans],
+        heading: ["var(--font-display)", ...fontFamily.sans],
+        // Cuerpo: Lato
         body: ["var(--font-body)", ...fontFamily.sans],
         sans: ["var(--font-body)", ...fontFamily.sans],
       },

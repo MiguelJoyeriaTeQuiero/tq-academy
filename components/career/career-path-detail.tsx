@@ -23,17 +23,15 @@ import {
   type CareerPath,
   type CompetenciaTeaDelta,
 } from "@/lib/career-paths";
-import type {
-  PlanCarreraAsignacion,
-  PlanCarreraHitoProgreso,
-} from "@/types/database";
+import type { PlanCarreraAsignacion } from "@/types/database";
+import type { HitoInfo } from "@/lib/career-paths-server";
 import { HitosTimeline } from "./hitos-timeline";
 
 interface Props {
   plan: CareerPath;
   mode: "admin" | "empleado";
   asignacion?: PlanCarreraAsignacion | null;
-  progresoHitos?: PlanCarreraHitoProgreso[] | null;
+  hitosInfo?: HitoInfo[] | null;
   progresoPct?: number;
 }
 
@@ -41,7 +39,7 @@ export function CareerPathDetail({
   plan,
   mode,
   asignacion,
-  progresoHitos,
+  hitosInfo,
   progresoPct,
 }: Props) {
   const from = getDPT(plan.fromSlug)!;

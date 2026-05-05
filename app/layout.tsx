@@ -1,23 +1,21 @@
 import type { Metadata, Viewport } from "next";
-import { Poppins, Fraunces } from "next/font/google";
+import { Montserrat, Lato } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 
-// Cuerpo y nombre marca — oficial del manual Te Quiero
-const poppins = Poppins({
+// Cuerpo — Lato (pesos disponibles: 300, 400, 700)
+const lato = Lato({
   subsets: ["latin"],
   variable: "--font-body",
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["300", "400", "700"],
   display: "swap",
 });
 
-// Display serif — alternativa libre a "Zodiak" del manual.
-// Fraunces es variable (opsz, soft) y comparte el carácter cálido del manual.
-const fraunces = Fraunces({
+// Titulares y display — Montserrat
+const montserrat = Montserrat({
   subsets: ["latin"],
   variable: "--font-display",
   weight: ["300", "400", "500", "600", "700"],
-  style: ["normal", "italic"],
   display: "swap",
 });
 
@@ -42,7 +40,7 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${poppins.variable} ${fraunces.variable}`}
+      className={`${lato.variable} ${montserrat.variable}`}
     >
       <body className="antialiased">
         {children}
