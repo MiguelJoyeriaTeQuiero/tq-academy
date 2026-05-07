@@ -157,7 +157,11 @@ Responde ÚNICAMENTE con un JSON array de strings, una por incidencia, en el mis
   const helpdeskUrl = process.env.HELPDESK_URL;
   const helpdeskSecret = process.env.HELPDESK_INTEGRATION_SECRET;
 
-  if (helpdeskUrl && helpdeskSecret && insertadas?.length) {
+  const helpdeskResults: Array<{ accion_id: string; ok: boolean; ticket_id?: string; status?: number; error?: string }> = [];
+
+  if (!helpdeskUrl || !helpdeskSecret) {
+    helpdeskResults.push({ accion_id: "n/a", ok: false, error: `env vars missing — HELPDESK_URL=${helpdeskUrl ?? "undefined"} HELPDESK_INTEGRATION_SECRET=${helpdeskSecret ? "set" : "undefined"}` });
+  } else if (insertadas?.length) {
     // Fetch visita metadata for helpdesk ticket description
     const { data: visita } = await supabase
       .from("visitas_tienda")
@@ -194,19 +198,24 @@ Responde ÚNICAMENTE con un JSON array de strings, una por incidencia, en el mis
             }),
           });
 
+          const resBody = await res.json().catch(() => ({})) as Record<string, unknown>;
+
           if (res.ok) {
-            const { id: ticketId } = (await res.json()) as { id: string };
+            const ticketId = resBody.id as string;
             await supabase
               .from("acciones_visita")
               .update({ helpdesk_ticket_id: ticketId })
               .eq("id", accion.id);
+            helpdeskResults.push({ accion_id: accion.id, ok: true, ticket_id: ticketId });
+          } else {
+            helpdeskResults.push({ accion_id: accion.id, ok: false, status: res.status, error: JSON.stringify(resBody) });
           }
-        } catch {
-          // Non-critical — accion already created, helpdesk linking is best-effort
+        } catch (err) {
+          helpdeskResults.push({ accion_id: accion.id, ok: false, error: String(err) });
         }
       }),
     );
   }
 
-  return Response.json({ created: insertadas?.length ?? nuevas.length });
+  return Response.json({ created: insertadas?.length ?? nuevas.length, helpdesk: helpdeskResults });
 }
