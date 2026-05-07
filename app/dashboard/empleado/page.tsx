@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { CourseCard } from "@/components/empleado/course-card";
+import { PuntosWidget } from "@/components/gamificacion/puntos-widget";
 import {
   BookOpen,
   Clock,
@@ -54,6 +55,30 @@ export default async function EmpleadoHomePage() {
           .eq("usuario_id", user.id)
           .in("curso_id", cursoIds)
       : { data: [] };
+
+  // Gamification data
+  const [{ data: puntosRow }, { data: insigniasObtenidas }] = await Promise.all([
+    supabase.from("puntos").select("puntos_total, racha_dias").eq("usuario_id", user.id).maybeSingle(),
+    supabase.from("usuario_insignias")
+      .select("insignia_id, fecha_obtenida, insignias(id, nombre, descripcion)")
+      .eq("usuario_id", user.id)
+      .order("fecha_obtenida", { ascending: false }),
+  ]);
+
+  const [{ count: totalEmpleados }, { count: posRanking }] = await Promise.all([
+    supabase.from("puntos").select("*", { count: "exact", head: true }),
+    supabase.from("puntos")
+      .select("*", { count: "exact", head: true })
+      .gt("puntos_total", puntosRow?.puntos_total ?? 0),
+  ]);
+
+  type InsigniaRow = { insignia_id: string; fecha_obtenida: string; insignias: { id: string; nombre: string; descripcion: string | null } | null };
+  const insigniasData = (insigniasObtenidas ?? []).map((r) => {
+    const ins = (r as unknown as InsigniaRow).insignias;
+    return ins ? { id: ins.id, nombre: ins.nombre, descripcion: ins.descripcion, fecha_obtenida: (r as unknown as InsigniaRow).fecha_obtenida } : null;
+  }).filter(Boolean) as { id: string; nombre: string; descripcion: string | null; fecha_obtenida: string }[];
+
+  const posicionRanking = (posRanking ?? 0) + 1;
 
   const progresoPorCurso = Object.fromEntries(
     (progresos ?? []).map((p) => [p.curso_id, p]),
@@ -228,6 +253,15 @@ export default async function EmpleadoHomePage() {
           </div>
         </div>
       </section>
+
+      {/* ── Gamificación ──────────────────────────────────── */}
+      <PuntosWidget
+        puntosTotal={puntosRow?.puntos_total ?? 0}
+        rachaDias={puntosRow?.racha_dias ?? 0}
+        insignias={insigniasData}
+        posicionRanking={totalEmpleados ? posicionRanking : null}
+        totalEmpleados={totalEmpleados ?? 0}
+      />
 
       {/* ── Continúa donde lo dejaste ──────────────────────── */}
       {continuar && (

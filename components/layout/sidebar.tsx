@@ -29,6 +29,7 @@ import {
   LifeBuoy,
   Route,
   Compass,
+  LayoutTemplate,
 } from "lucide-react";
 import type { UserRol } from "@/types/database";
 
@@ -51,9 +52,12 @@ const NAV_ITEMS: NavItem[] = [
   { label: "Cursos",        href: "/dashboard/admin/cursos",       icon: BookOpen,       roles: ["super_admin", "admin_rrhh"] },
   { label: "Rutas de aprendizaje", href: "/dashboard/admin/rutas",  icon: Route,          roles: ["super_admin", "admin_rrhh"] },
   { label: "Exámenes mensuales", href: "/dashboard/admin/examenes-mensuales", icon: Sparkles,  roles: ["super_admin", "admin_rrhh"] },
-  { label: "Notificaciones",href: "/dashboard/admin/notificaciones", icon: Bell,         roles: ["super_admin", "admin_rrhh"] },
-  { label: "Visitas tienda", href: "/dashboard/admin/visitas",       icon: ClipboardCheck,  roles: ["super_admin", "admin_rrhh"] },
-  { label: "Reportes",      href: "/dashboard/admin/reportes",     icon: BarChart3,      roles: ["super_admin", "admin_rrhh"] },
+  { label: "Notificaciones",href: "/dashboard/admin/notificaciones", icon: Bell,           roles: ["super_admin", "admin_rrhh"] },
+  { label: "Reportes",      href: "/dashboard/admin/reportes",      icon: BarChart3,       roles: ["super_admin", "admin_rrhh"] },
+  // ── Tienda ─────────────────────────────────────────────
+  { label: "Visitas",       href: "/dashboard/admin/visitas",        icon: ClipboardCheck,  roles: ["super_admin", "admin_rrhh", "manager"] },
+  { label: "Plantillas",    href: "/dashboard/admin/plantillas",     icon: LayoutTemplate,  roles: ["super_admin", "admin_rrhh"] },
+  { label: "Gamificación",  href: "/dashboard/admin/gamificacion",   icon: Trophy,          roles: ["super_admin", "admin_rrhh"] },
   // ── Manager ────────────────────────────────────────────
   { label: "Dashboard",     href: "/dashboard/manager",            icon: LayoutDashboard, roles: ["manager"] },
   { label: "Mi equipo",     href: "/dashboard/manager/empleados",  icon: UserCheck,       roles: ["manager"] },
@@ -74,10 +78,11 @@ const NAV_ITEMS: NavItem[] = [
 ];
 
 const SECTION_LABELS: Record<string, { title: string; roles: UserRol[] }> = {
-  "/dashboard/admin":    { title: "Administración", roles: ["super_admin", "admin_rrhh"] },
-  "/dashboard/manager":  { title: "Gestión",        roles: ["manager"] },
-  "/dashboard/empleado": { title: "Aprendizaje",    roles: ["empleado", "manager"] },
-  "/dashboard/empleado/ranking": { title: "Analítica", roles: ["super_admin", "admin_rrhh"] },
+  "/dashboard/admin":          { title: "Administración", roles: ["super_admin", "admin_rrhh"] },
+  "/dashboard/admin/visitas":  { title: "Tienda",         roles: ["super_admin", "admin_rrhh", "manager"] },
+  "/dashboard/manager":        { title: "Gestión",        roles: ["manager"] },
+  "/dashboard/empleado":       { title: "Aprendizaje",    roles: ["empleado", "manager"] },
+  "/dashboard/empleado/ranking": { title: "Analítica",    roles: ["super_admin", "admin_rrhh"] },
 };
 
 function getRolLabel(rol: UserRol) {

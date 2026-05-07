@@ -6,6 +6,7 @@ import {
   BookOpen, CheckCircle2, Clock, GraduationCap, Award, ExternalLink,
   AlertCircle,
 } from "lucide-react";
+import { OrgSubnav } from "@/components/admin/org-subnav";
 
 export const dynamic = "force-dynamic";
 
@@ -145,6 +146,8 @@ export default async function FichaUsuarioPage({ params }: { params: { id: strin
 
   return (
     <div className="max-w-4xl space-y-6">
+      <OrgSubnav />
+
       {/* ── Back ──────────────────────────────────────────── */}
       <Link
         href="/dashboard/admin/usuarios"

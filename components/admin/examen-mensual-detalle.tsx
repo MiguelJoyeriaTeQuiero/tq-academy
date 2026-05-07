@@ -21,6 +21,7 @@ export function ExamenMensualDetalle({
   publicado: publicadoInicial,
   notaMinima,
   maxIntentos,
+  tiempoLimiteMin,
   preguntas,
   intentos,
 }: {
@@ -28,6 +29,7 @@ export function ExamenMensualDetalle({
   publicado: boolean;
   notaMinima: number;
   maxIntentos: number;
+  tiempoLimiteMin: number | null;
   preguntas: PreguntaExamen[];
   intentos: IntentoRow[];
 }) {
@@ -82,6 +84,7 @@ export function ExamenMensualDetalle({
             <span className="text-amber-700 font-medium">Borrador</span>
           )}{" "}
           · Nota mínima {notaMinima}% · Máx. {maxIntentos} intentos · {preguntas.length} preguntas
+          {tiempoLimiteMin ? ` · ${tiempoLimiteMin} min` : ""}
         </div>
         <Button onClick={togglePublicar} disabled={loading} variant={publicado ? "outline" : "default"}>
           {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}

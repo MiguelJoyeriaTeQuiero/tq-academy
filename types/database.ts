@@ -18,7 +18,7 @@ export interface ChecklistPlantilla {
   nombre: string;
   descripcion: string | null;
   activo: boolean;
-  created_by: string;
+  created_by: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -59,6 +59,8 @@ export interface VisitaRespuesta {
   item_id: string;
   estado: RespuestaEstado | null;
   notas: string | null;
+  foto_path: string | null;
+  foto_url: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -317,6 +319,7 @@ export interface ExamenMensual {
   preguntas: PreguntaExamen[];
   nota_minima: number;
   max_intentos: number;
+  tiempo_limite_min: number | null;
   publicado: boolean;
   generado_por: "ia" | "manual";
   modelo_ia: string | null;
@@ -728,6 +731,7 @@ export type Database = {
           preguntas?: PreguntaExamen[];
           nota_minima?: number;
           max_intentos?: number;
+          tiempo_limite_min?: number | null;
           publicado?: boolean;
           generado_por?: "ia" | "manual";
           modelo_ia?: string | null;
@@ -737,6 +741,7 @@ export type Database = {
           preguntas?: PreguntaExamen[];
           nota_minima?: number;
           max_intentos?: number;
+          tiempo_limite_min?: number | null;
           publicado?: boolean;
           modelo_ia?: string | null;
         };
@@ -890,7 +895,7 @@ export type Database = {
           nombre: string;
           descripcion?: string | null;
           activo?: boolean;
-          created_by: string;
+          created_by?: string | null;
         };
         Update: {
           nombre?: string;
@@ -956,10 +961,49 @@ export type Database = {
           item_id: string;
           estado?: RespuestaEstado | null;
           notas?: string | null;
+          foto_path?: string | null;
+          foto_url?: string | null;
         };
         Update: {
           estado?: RespuestaEstado | null;
           notas?: string | null;
+          foto_path?: string | null;
+          foto_url?: string | null;
+        };
+        Relationships: [];
+      };
+      acciones_visita: {
+        Row: {
+          id: string;
+          visita_id: string;
+          respuesta_id: string | null;
+          titulo: string;
+          responsable_id: string | null;
+          fecha_limite: string | null;
+          estado: string;
+          notas: string | null;
+          helpdesk_ticket_id: string | null;
+          created_at: string;
+          updated_at: string;
+        } & Record<string, unknown>;
+        Insert: {
+          id?: string;
+          visita_id: string;
+          respuesta_id?: string | null;
+          titulo: string;
+          responsable_id?: string | null;
+          fecha_limite?: string | null;
+          estado?: string;
+          notas?: string | null;
+          helpdesk_ticket_id?: string | null;
+        };
+        Update: {
+          titulo?: string;
+          responsable_id?: string | null;
+          fecha_limite?: string | null;
+          estado?: string;
+          notas?: string | null;
+          helpdesk_ticket_id?: string | null;
         };
         Relationships: [];
       };

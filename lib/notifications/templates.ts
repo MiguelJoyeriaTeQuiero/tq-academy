@@ -2,6 +2,7 @@ import type {
   CursoAsignadoData,
   CursoCompletadoData,
   DeadlineProximoData,
+  VisitaProximaData,
   NotificationData,
 } from "./types";
 
@@ -128,6 +129,31 @@ function cursoCompletado(d: CursoCompletadoData): RenderedTemplate {
   return { subject, html, text };
 }
 
+function visitaProxima(d: VisitaProximaData): RenderedTemplate {
+  const fechaFormateada = formatFecha(d.proxima_visita);
+  const subject = `Visita programada: ${d.tienda_nombre} — en 7 días (${fechaFormateada})`;
+
+  const html = shell(`
+    <p style="font-size:15px;margin:0 0 16px">Hola ${d.nombre_destinatario},</p>
+    <p style="font-size:15px;margin:0 0 16px">Se acerca la visita mensual programada a:</p>
+    <p style="font-size:18px;font-weight:600;margin:0 0 8px">${d.tienda_nombre}</p>
+    <p style="font-size:14px;color:#666;margin:0 0 16px">${d.tienda_isla}</p>
+    <p style="font-size:15px;margin:0 0 24px">Fecha: <strong>${fechaFormateada}</strong> — quedan 7 días.</p>
+    <p style="margin:24px 0">${btn(d.url_visitas, "Ver visitas")}</p>
+  `);
+
+  const text = [
+    `Hola ${d.nombre_destinatario},`,
+    "",
+    `Se acerca la visita mensual a ${d.tienda_nombre} (${d.tienda_isla}).`,
+    `Fecha programada: ${fechaFormateada} — quedan 7 días.`,
+    "",
+    `Ver visitas: ${d.url_visitas}`,
+  ].join("\n");
+
+  return { subject, html, text };
+}
+
 export function renderTemplate(event: NotificationData): RenderedTemplate {
   switch (event.tipo) {
     case "curso_asignado":
@@ -136,5 +162,7 @@ export function renderTemplate(event: NotificationData): RenderedTemplate {
       return deadlineProximo(event.data);
     case "curso_completado":
       return cursoCompletado(event.data);
+    case "visita_proxima":
+      return visitaProxima(event.data);
   }
 }

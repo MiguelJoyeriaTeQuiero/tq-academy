@@ -30,6 +30,7 @@ export function GenerarExamenAdminForm({
   const [cursoId, setCursoId] = useState<string>("");
   const [periodo, setPeriodo] = useState(periodoActual());
   const [num, setNum] = useState(15);
+  const [tiempoLimite, setTiempoLimite] = useState<string>("");
   const [loading, setLoading] = useState(false);
 
   async function generar(forzar = false) {
@@ -46,6 +47,7 @@ export function GenerarExamenAdminForm({
           curso_id: cursoId,
           periodo,
           num_preguntas: num,
+          tiempo_limite_min: tiempoLimite ? Number(tiempoLimite) : null,
           forzar,
         }),
       });
@@ -82,7 +84,7 @@ export function GenerarExamenAdminForm({
         <h3 className="font-semibold">Generar examen mensual con IA</h3>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-5 gap-3">
         <div className="sm:col-span-2">
           <Label>Curso</Label>
           <Select value={cursoId} onValueChange={setCursoId}>
@@ -116,6 +118,18 @@ export function GenerarExamenAdminForm({
             max={40}
             value={num}
             onChange={(e) => setNum(Number(e.target.value))}
+          />
+        </div>
+        <div>
+          <Label htmlFor="tiempo">Tiempo límite (min)</Label>
+          <Input
+            id="tiempo"
+            type="number"
+            min={1}
+            max={180}
+            placeholder="Sin límite"
+            value={tiempoLimite}
+            onChange={(e) => setTiempoLimite(e.target.value)}
           />
         </div>
       </div>

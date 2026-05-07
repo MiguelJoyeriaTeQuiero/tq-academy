@@ -4,9 +4,11 @@ import Link from "next/link";
 import {
   CheckCircle2, AlertTriangle, MinusCircle,
   CalendarClock, ArrowLeft, Image as ImageIcon, Video,
-  ClipboardCheck, FileText,
+  ClipboardCheck, FileText, ListChecks,
 } from "lucide-react";
 import type { PlantillaConSecciones, VisitaRespuesta, VisitaAdjunto } from "@/types/database";
+import { PlanAcciones } from "@/components/visitas/plan-acciones";
+import { VisitasSubnav } from "@/components/visitas/visitas-subnav";
 
 interface VisitaBasic {
   id: string;
@@ -51,6 +53,8 @@ export function VisitaInforme({ visita, plantilla, respuestasMap, adjuntos }: Pr
 
   return (
     <div className="max-w-3xl space-y-7">
+      <VisitasSubnav />
+
       {/* Back */}
       <Link
         href="/dashboard/admin/visitas"
@@ -151,6 +155,20 @@ export function VisitaInforme({ visita, plantilla, respuestasMap, adjuntos }: Pr
                               {resp.notas}
                             </p>
                           )}
+                          {estado === "incidencia" && (resp as VisitaRespuesta & { foto_url?: string | null })?.foto_url && (
+                            <a
+                              href={(resp as VisitaRespuesta & { foto_url?: string | null }).foto_url!}
+                              target="_blank" rel="noopener noreferrer"
+                              className="mt-1.5 inline-block"
+                            >
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img
+                                src={(resp as VisitaRespuesta & { foto_url?: string | null }).foto_url!}
+                                alt="Foto incidencia"
+                                className="h-16 w-16 object-cover rounded-lg border border-amber-200 hover:border-tq-sky/50 transition-colors"
+                              />
+                            </a>
+                          )}
                         </div>
                         {cfg && (
                           <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${cfg.bg} ${cfg.color} shrink-0`}>
@@ -247,6 +265,15 @@ export function VisitaInforme({ visita, plantilla, respuestasMap, adjuntos }: Pr
           )}
         </div>
       )}
+
+      {/* Plan de acción */}
+      <div className="tq-card p-5">
+        <div className="flex items-center gap-2 mb-4">
+          <ListChecks className="w-4 h-4 text-tq-sky" />
+          <h2 className="font-semibold text-sm text-tq-ink">Plan de acción</h2>
+        </div>
+        <PlanAcciones visitaId={visita.id} tieneIncidencias={nIncidencias > 0} />
+      </div>
 
       {/* Pendientes warning */}
       {nPendientes > 0 && (

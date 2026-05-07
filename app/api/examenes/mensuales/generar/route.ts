@@ -31,12 +31,14 @@ export async function POST(req: Request) {
     curso_id,
     periodo = periodoActual(),
     num_preguntas = 15,
+    tiempo_limite_min = null,
     publicar = false,
     forzar = false,
   } = body as {
     curso_id?: string;
     periodo?: string;
     num_preguntas?: number;
+    tiempo_limite_min?: number | null;
     publicar?: boolean;
     forzar?: boolean;
   };
@@ -125,6 +127,7 @@ export async function POST(req: Request) {
     periodo,
     titulo: resultado.titulo,
     preguntas: resultado.preguntas,
+    tiempo_limite_min: tiempo_limite_min ?? null,
     publicado: publicar,
     generado_por: "ia" as const,
     modelo_ia: resultado.modelo,
@@ -137,6 +140,7 @@ export async function POST(req: Request) {
       .update({
         titulo: payload.titulo,
         preguntas: payload.preguntas,
+        tiempo_limite_min: payload.tiempo_limite_min,
         publicado: payload.publicado,
         modelo_ia: payload.modelo_ia,
       })

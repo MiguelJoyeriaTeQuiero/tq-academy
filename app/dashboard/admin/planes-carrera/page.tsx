@@ -7,6 +7,7 @@ import {
   Target,
   Timer,
 } from "lucide-react";
+import { OrgSubnav } from "@/components/admin/org-subnav";
 import {
   CAREER_PATHS,
   TRACK_LABEL,
@@ -46,6 +47,8 @@ export default function PlanesCarreraIndex() {
 
   return (
     <div className="space-y-7">
+      <OrgSubnav />
+
       {/* ── Hero ─────────────────────────────────────────── */}
       <section className="relative overflow-hidden rounded-3xl bg-tq-ink text-white px-6 sm:px-10 py-10 sm:py-14">
         <div

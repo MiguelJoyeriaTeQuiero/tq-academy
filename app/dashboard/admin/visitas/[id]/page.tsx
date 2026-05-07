@@ -33,7 +33,7 @@ export default async function VisitaPage({ params }: { params: { id: string } })
           items:checklist_items(id, texto, orden)
         )
       ),
-      respuestas:visita_respuestas(id, item_id, estado, notas),
+      respuestas:visita_respuestas(id, item_id, estado, notas, foto_path, foto_url),
       adjuntos:visita_adjuntos(id, tipo, url, nombre, tamano_bytes, storage_path)
     `)
     .eq("id", params.id)

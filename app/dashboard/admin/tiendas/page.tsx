@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { TiendaForm } from "@/components/admin/tienda-form";
 import { TiendasTable } from "@/components/admin/tiendas-table";
 import { MapPin, Building2, Pin, Plus } from "lucide-react";
+import { OrgSubnav } from "@/components/admin/org-subnav";
 
 export const dynamic = "force-dynamic";
 
@@ -29,6 +30,8 @@ export default async function TiendasPage() {
 
   return (
     <div className="space-y-7">
+      <OrgSubnav />
+
       {/* ── Header ───────────────────────────────────────── */}
       <div>
         <p className="tq-eyebrow">Red Te Quiero</p>

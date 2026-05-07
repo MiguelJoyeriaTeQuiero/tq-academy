@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import { UserPlus, Users, Shield, UserCheck, GraduationCap, ArrowRight } from "lucide-react";
 import { UserActionsMenu } from "@/components/admin/user-actions-menu";
+import { OrgSubnav } from "@/components/admin/org-subnav";
 
 export const dynamic = "force-dynamic";
 
@@ -48,6 +49,8 @@ export default async function UsuariosPage() {
 
   return (
     <div className="space-y-7">
+      <OrgSubnav />
+
       {/* ── Header ───────────────────────────────────────── */}
       <div className="flex items-end justify-between flex-wrap gap-4">
         <div>

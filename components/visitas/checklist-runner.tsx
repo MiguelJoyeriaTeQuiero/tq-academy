@@ -4,7 +4,7 @@ import { useState, useTransition, useRef } from "react";
 import { useRouter } from "next/navigation";
 import {
   CheckCircle2, AlertTriangle, MinusCircle, ChevronDown,
-  ChevronUp, Loader2, Calendar, ImagePlus, Trash2, ClipboardCheck,
+  ChevronUp, Loader2, Calendar, ImagePlus, Trash2, ClipboardCheck, Camera, X,
 } from "lucide-react";
 import {
   guardarRespuesta, completarVisita,
@@ -56,6 +56,14 @@ export function ChecklistRunner({ visita, plantilla, respuestasMap: initialMap, 
         .map(([k, r]) => [k, r.notas ?? ""])
     )
   );
+  const [fotosIncidencia, setFotosIncidencia] = useState<Record<string, { path: string; url: string }>>(
+    Object.fromEntries(
+      Object.entries(initialMap)
+        .filter(([, r]) => r.estado === "incidencia" && r.foto_url)
+        .map(([k, r]) => [k, { path: r.foto_path ?? "", url: r.foto_url! }])
+    )
+  );
+  const [uploadingFoto, setUploadingFoto] = useState<Record<string, boolean>>({});
 
   // Estado de cierre de visita
   const [paso, setPaso] = useState<"checklist" | "cierre">("checklist");
@@ -93,8 +101,32 @@ export function ChecklistRunner({ visita, plantilla, respuestasMap: initialMap, 
 
   async function handleNotasBlur(itemId: string) {
     if (respuestas[itemId]?.estado === "incidencia") {
-      await guardarRespuesta(visita.id, itemId, "incidencia", notasIncidencia[itemId]);
+      await guardarRespuesta(visita.id, itemId, "incidencia", notasIncidencia[itemId], fotosIncidencia[itemId] ?? null);
     }
+  }
+
+  async function handleFotoIncidencia(itemId: string, file: File) {
+    setUploadingFoto((s) => ({ ...s, [itemId]: true }));
+    const supabase = createClient();
+    const ext = file.name.split(".").pop();
+    const path = `visitas/${visita.id}/items/${itemId}.${ext}`;
+    const { error } = await supabase.storage.from("visitas-media").upload(path, file, { upsert: true, cacheControl: "3600" });
+    if (!error) {
+      const { data: urlData } = supabase.storage.from("visitas-media").getPublicUrl(path);
+      const foto = { path, url: urlData.publicUrl };
+      setFotosIncidencia((prev) => ({ ...prev, [itemId]: foto }));
+      await guardarRespuesta(visita.id, itemId, "incidencia", notasIncidencia[itemId], foto);
+    }
+    setUploadingFoto((s) => ({ ...s, [itemId]: false }));
+  }
+
+  async function handleEliminarFoto(itemId: string) {
+    const foto = fotosIncidencia[itemId];
+    if (!foto) return;
+    const supabase = createClient();
+    await supabase.storage.from("visitas-media").remove([foto.path]);
+    setFotosIncidencia((prev) => { const n = { ...prev }; delete n[itemId]; return n; });
+    await guardarRespuesta(visita.id, itemId, "incidencia", notasIncidencia[itemId], null);
   }
 
   // ── Upload adjuntos ──────────────────────────────────────────
@@ -259,9 +291,9 @@ export function ChecklistRunner({ visita, plantilla, respuestasMap: initialMap, 
                         </div>
                       </div>
 
-                      {/* Notas de incidencia */}
+                      {/* Notas + foto de incidencia */}
                       {esIncidencia && (
-                        <div className="mt-2.5 ml-0">
+                        <div className="mt-2.5 space-y-2">
                           <textarea
                             value={notasIncidencia[item.id] ?? ""}
                             onChange={(e) => handleNotas(item.id, e.target.value)}
@@ -270,6 +302,27 @@ export function ChecklistRunner({ visita, plantilla, respuestasMap: initialMap, 
                             rows={2}
                             className="w-full px-3 py-2 rounded-lg border border-red-200 bg-red-50/50 text-sm text-tq-ink placeholder:text-tq-ink/35 focus:outline-none focus:ring-2 focus:ring-red-300 resize-none"
                           />
+                          {/* Foto */}
+                          {fotosIncidencia[item.id] ? (
+                            <div className="relative inline-block">
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img src={fotosIncidencia[item.id].url} alt="Foto incidencia"
+                                className="h-20 w-20 object-cover rounded-lg border border-red-200" />
+                              <button type="button" onClick={() => handleEliminarFoto(item.id)}
+                                className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-red-500 text-white flex items-center justify-center hover:bg-red-600 transition-colors">
+                                <X className="w-3 h-3" />
+                              </button>
+                            </div>
+                          ) : (
+                            <label className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-dashed border-red-300 text-red-500 text-xs font-medium cursor-pointer hover:bg-red-50 transition-colors">
+                              {uploadingFoto[item.id]
+                                ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                : <Camera className="w-3.5 h-3.5" />}
+                              <span>Añadir foto</span>
+                              <input type="file" accept="image/*" capture="environment" className="hidden"
+                                onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFotoIncidencia(item.id, f); }} />
+                            </label>
+                          )}
                         </div>
                       )}
                     </div>

@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { DepartamentoForm } from "@/components/admin/departamento-form";
 import { FolderOpen, Plus, CheckCircle2, XCircle } from "lucide-react";
+import { OrgSubnav } from "@/components/admin/org-subnav";
 
 export const dynamic = "force-dynamic";
 
@@ -17,6 +18,8 @@ export default async function DepartamentosPage() {
 
   return (
     <div className="space-y-7">
+      <OrgSubnav />
+
       {/* ── Header ───────────────────────────────────────── */}
       <div>
         <p className="tq-eyebrow">Estructura interna</p>

@@ -4,6 +4,8 @@ import {
   ClipboardCheck, AlertTriangle, CalendarClock, Store,
   Plus, ArrowRight, CheckCircle2, Clock,
 } from "lucide-react";
+import { ExportarPdfDialog } from "@/components/visitas/exportar-pdf-dialog";
+import { VisitasSubnav } from "@/components/visitas/visitas-subnav";
 
 export const dynamic = "force-dynamic";
 
@@ -24,6 +26,11 @@ function diasHasta(iso: string) {
 
 export default async function VisitasPage() {
   const supabase = createClient();
+
+  const { data: { user } } = await supabase.auth.getUser();
+  const { data: profile } = user
+    ? await supabase.from("profiles").select("rol, tienda_id").eq("id", user.id).single()
+    : { data: null };
 
   const hoy = new Date().toISOString().slice(0, 10);
   const inicioMes = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
@@ -64,7 +71,7 @@ export default async function VisitasPage() {
       .select("*", { count: "exact", head: true })
       .gte("fecha_visita", inicioMes),
 
-    supabase.from("tiendas").select("id").eq("activo", true),
+    supabase.from("tiendas").select("id, nombre, isla").eq("activo", true).order("nombre"),
   ]);
 
   // KPIs
@@ -85,6 +92,8 @@ export default async function VisitasPage() {
 
   return (
     <div className="space-y-7">
+      <VisitasSubnav />
+
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
@@ -94,13 +103,20 @@ export default async function VisitasPage() {
             Gestiona las revisiones y el seguimiento de incidencias.
           </p>
         </div>
-        <Link
-          href="/dashboard/admin/visitas/nueva"
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-tq-ink text-white text-sm font-medium hover:bg-tq-deep transition-colors shadow-tq-soft"
-        >
-          <Plus className="w-4 h-4" />
-          Nueva visita
-        </Link>
+        <div className="flex items-center gap-2">
+          <ExportarPdfDialog
+            rol={profile?.rol ?? "admin_rrhh"}
+            tiendaIdPropia={profile?.tienda_id ?? null}
+            tiendas={tiendas ?? []}
+          />
+          <Link
+            href="/dashboard/admin/visitas/nueva"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-tq-ink text-white text-sm font-medium hover:bg-tq-deep transition-colors shadow-tq-soft"
+          >
+            <Plus className="w-4 h-4" />
+            Nueva visita
+          </Link>
+        </div>
       </div>
 
       {/* KPIs */}

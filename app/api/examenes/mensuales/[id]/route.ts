@@ -51,6 +51,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     preguntas?: PreguntaExamen[];
     nota_minima?: number;
     max_intentos?: number;
+    tiempo_limite_min?: number | null;
     publicado?: boolean;
   };
   const allowed: {
@@ -58,12 +59,14 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     preguntas?: PreguntaExamen[];
     nota_minima?: number;
     max_intentos?: number;
+    tiempo_limite_min?: number | null;
     publicado?: boolean;
   } = {};
   if (body.titulo !== undefined) allowed.titulo = body.titulo;
   if (body.preguntas !== undefined) allowed.preguntas = body.preguntas;
   if (body.nota_minima !== undefined) allowed.nota_minima = body.nota_minima;
   if (body.max_intentos !== undefined) allowed.max_intentos = body.max_intentos;
+  if (body.tiempo_limite_min !== undefined) allowed.tiempo_limite_min = body.tiempo_limite_min;
   if (body.publicado !== undefined) allowed.publicado = body.publicado;
 
   const { error } = await supabase

@@ -16,7 +16,7 @@ export default async function ExamenMensualEmpleadoPage({
 
   const { data: examen } = await supabase
     .from("examenes_mensuales")
-    .select("id, curso_id, titulo, periodo, preguntas, nota_minima, max_intentos, publicado, cursos(titulo)")
+    .select("id, curso_id, titulo, periodo, preguntas, nota_minima, max_intentos, tiempo_limite_min, publicado, cursos(titulo)")
     .eq("id", params.id)
     .single();
 
@@ -62,7 +62,7 @@ export default async function ExamenMensualEmpleadoPage({
         preguntas={preguntasSinRespuesta}
         notaMinima={examen.nota_minima}
         maxIntentos={examen.max_intentos}
-        tiempoLimiteMin={null}
+        tiempoLimiteMin={examen.tiempo_limite_min ?? null}
         intentosPrevios={(intentos ?? []).map((i) => ({
           id: i.id,
           nota: i.nota ?? 0,

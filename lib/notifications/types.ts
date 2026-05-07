@@ -1,7 +1,8 @@
 export type NotificationTipo =
   | "curso_asignado"
   | "deadline_proximo"
-  | "curso_completado";
+  | "curso_completado"
+  | "visita_proxima";
 
 export type NotificationStatus = "pending" | "sent" | "failed" | "skipped";
 
@@ -29,6 +30,7 @@ export interface NotificationPreferences {
   curso_asignado: boolean;
   deadline_proximo: boolean;
   curso_completado: boolean;
+  visita_proxima: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -77,7 +79,17 @@ export interface CursoCompletadoData {
   url_certificado: string | null;
 }
 
+export interface VisitaProximaData {
+  nombre_destinatario: string;
+  tienda_nombre: string;
+  tienda_isla: string;
+  proxima_visita: string; // ISO date
+  visita_id: string;
+  url_visitas: string;
+}
+
 export type NotificationData =
   | { tipo: "curso_asignado"; data: CursoAsignadoData }
   | { tipo: "deadline_proximo"; data: DeadlineProximoData }
-  | { tipo: "curso_completado"; data: CursoCompletadoData };
+  | { tipo: "curso_completado"; data: CursoCompletadoData }
+  | { tipo: "visita_proxima"; data: VisitaProximaData };

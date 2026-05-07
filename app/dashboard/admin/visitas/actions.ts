@@ -34,11 +34,18 @@ export async function guardarRespuesta(
   visitaId: string,
   itemId: string,
   estado: RespuestaEstado,
-  notas?: string
+  notas?: string,
+  foto?: { path: string; url: string } | null
 ) {
   const supabase = createClient();
   const { error } = await supabase.from("visita_respuestas").upsert(
-    { visita_id: visitaId, item_id: itemId, estado, notas: notas ?? null },
+    {
+      visita_id: visitaId,
+      item_id: itemId,
+      estado,
+      notas: notas ?? null,
+      ...(foto !== undefined ? { foto_path: foto?.path ?? null, foto_url: foto?.url ?? null } : {}),
+    },
     { onConflict: "visita_id,item_id" }
   );
   if (error) throw new Error(error.message);

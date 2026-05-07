@@ -26,12 +26,15 @@ interface EnqueueResult {
 
 function prefKeyFor(tipo: NotificationData["tipo"]): keyof Pick<
   NotificationPreferences,
-  "curso_asignado" | "deadline_proximo" | "curso_completado"
+  "curso_asignado" | "deadline_proximo" | "curso_completado" | "visita_proxima"
 > {
   return tipo;
 }
 
 function metadataFromEvent(event: NotificationData): Record<string, unknown> {
+  if (event.tipo === "visita_proxima") {
+    return { visita_id: event.data.visita_id };
+  }
   if ("curso_id" in event.data) {
     return { curso_id: event.data.curso_id };
   }
@@ -60,7 +63,7 @@ export async function enqueueNotification(
 
   const { data: prefs } = await supabase
     .from("notification_preferences")
-    .select("curso_asignado, deadline_proximo, curso_completado")
+    .select("curso_asignado, deadline_proximo, curso_completado, visita_proxima")
     .eq("usuario_id", usuario_id)
     .maybeSingle();
 

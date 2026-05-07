@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import { Plus, Pencil, ToggleLeft, ToggleRight, Layers } from "lucide-react";
 import { togglePlantillaActivo } from "./actions";
+import { VisitasSubnav } from "@/components/visitas/visitas-subnav";
 
 export const dynamic = "force-dynamic";
 
@@ -21,6 +22,8 @@ export default async function PlantillasPage() {
 
   return (
     <div className="space-y-6">
+      <VisitasSubnav />
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>

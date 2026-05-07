@@ -54,6 +54,7 @@ export default async function ExamenMensualAdminDetallePage({
         publicado={examen.publicado}
         notaMinima={examen.nota_minima}
         maxIntentos={examen.max_intentos}
+        tiempoLimiteMin={examen.tiempo_limite_min ?? null}
         preguntas={examen.preguntas as PreguntaExamen[]}
         intentos={intentos ?? []}
       />
